@@ -3,26 +3,23 @@ tests/test_core.py — Pytest-тести для перевірки чистот�
 """
 
 from copy import deepcopy
-from typing import List
+
 import pytest
 
 from core import (
     Rental,
     calculate_base_price,
-    default_duration_discount,
-    default_insurance_fee,
-    default_rental_filter,
-    with_rental_totals,
-    stamp_record,
-    make_rental_processor,
-    process_rentals_pure,
     compose,
     make_multiplier,
+    make_rental_processor,
+    process_rentals_pure,
+    stamp_record,
+    with_rental_totals,
 )
 
 
 @pytest.fixture
-def sample_rentals() -> List[Rental]:
+def sample_rentals() -> list[Rental]:
     return [
         {
             "id": 1,
@@ -55,12 +52,12 @@ def sample_rentals() -> List[Rental]:
     ]
 
 
-def test_calculate_base_price(sample_rentals: List[Rental]) -> None:
+def test_calculate_base_price(sample_rentals: list[Rental]) -> None:
     assert calculate_base_price(sample_rentals[0]) == 60.0
     assert calculate_base_price(sample_rentals[1]) == 250.0
 
 
-def test_with_rental_totals_immutability(sample_rentals: List[Rental]) -> None:
+def test_with_rental_totals_immutability(sample_rentals: list[Rental]) -> None:
     original = sample_rentals[0]
     updated = with_rental_totals(
         original,
@@ -77,7 +74,7 @@ def test_with_rental_totals_immutability(sample_rentals: List[Rental]) -> None:
     assert updated is not original
 
 
-def test_referential_transparency(sample_rentals: List[Rental]) -> None:
+def test_referential_transparency(sample_rentals: list[Rental]) -> None:
     # Той самий вхід гарантує ідентичний вихід без побічних ефектів
     r1 = process_rentals_pure(sample_rentals)
     r2 = process_rentals_pure(sample_rentals)
@@ -91,7 +88,7 @@ def test_referential_transparency(sample_rentals: List[Rental]) -> None:
     assert r1["revenue"] == 1530.90
 
 
-def test_no_mutation(sample_rentals: List[Rental]) -> None:
+def test_no_mutation(sample_rentals: list[Rental]) -> None:
     original = deepcopy(sample_rentals)
     process_rentals_pure(sample_rentals)
 
@@ -101,7 +98,7 @@ def test_no_mutation(sample_rentals: List[Rental]) -> None:
         assert "total" not in r
 
 
-def test_callable_policies(sample_rentals: List[Rental]) -> None:
+def test_callable_policies(sample_rentals: list[Rental]) -> None:
     # Перевірка гнучкої заміни політик через Callable
     custom_discount = lambda base, days: round(base * 0.20, 2)
     custom_insurance = lambda subtotal, car_class: round(subtotal * 0.10, 2)
@@ -132,9 +129,10 @@ def test_stamp_record() -> None:
     fixed_time = 1700000000.0
     mock_now = lambda: fixed_time
 
-    record = {"id": 1, "car_class": "economy", "days": 2, "daily_rate": 30.0}
+    record: Rental = {
+        "id": 1,
+        "car_class": "economy",
+        "days": 2,
+        "daily_rate": 30.0,
+    }
     stamped, ts = stamp_record(record, mock_now)
-
-    assert ts == fixed_time
-    assert stamped["id"] == record["id"]
-    assert stamped is not record

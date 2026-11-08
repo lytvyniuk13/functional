@@ -4,9 +4,9 @@ app.py — Оболонка побічних ефектів (Imperative Shell).
 демонстрацію інжекції часу та виведення звітів.
 """
 
-from datetime import datetime
 import time
-from typing import Any, Dict, List
+from datetime import datetime
+from typing import Any
 
 from core import (
     Rental,
@@ -17,7 +17,7 @@ from core import (
 
 
 def render_report(
-    result: Dict[str, Any], title: str = "ЗВІТ СИСТЕМИ ПРОКАТУ АВТОМОБІЛІВ"
+    result: dict[str, Any], title: str = "ЗВІТ СИСТЕМИ ПРОКАТУ АВТОМОБІЛІВ"
 ) -> None:
     """
     Імперативна функція вводу/виводу (I/O).
@@ -33,7 +33,7 @@ def render_report(
     )
     print("-" * 82)
 
-    rentals: List[Rental] = result.get("rentals", [])
+    rentals: list[Rental] = result.get("rentals", [])
     for r in rentals:
         print(
             f"{r['id']:<4} | "
@@ -56,7 +56,7 @@ def render_report(
 
 def main() -> None:
     # 1. Вхідний набір даних згідно зі специфікацією Варіанта №9
-    raw_rentals: List[Rental] = [
+    raw_rentals: list[Rental] = [
         {
             "id": 101,
             "car_class": "economy",
@@ -128,8 +128,7 @@ def main() -> None:
 
     # - Розширений критерій валідності: допускаємо і 'confirmed', і 'pending'
     flexible_filter = (
-        lambda r: r.get("status") in {"confirmed", "pending"}
-        and r.get("days", 0) > 0
+        lambda r: r.get("status") in {"confirmed", "pending"} and r.get("days", 0) > 0
     )
 
     promo_processor = make_rental_processor(
@@ -139,17 +138,13 @@ def main() -> None:
     )
     promo_report = promo_processor(raw_rentals)
     print()
-    render_report(
-        promo_report, title="АКЦІЙНИЙ РОЗРАХУНОК (CUSTOM CALLABLE POLICIES)"
-    )
+    render_report(promo_report, title="АКЦІЙНИЙ РОЗРАХУНОК (CUSTOM CALLABLE POLICIES)")
 
     # --- Демонстрація 3: Інжекція недетермінованого часу (stamp_record) ---
     if default_report["rentals"]:
         first_record: Rental = default_report["rentals"][0]
         stamped_record, timestamp = stamp_record(first_record, time.time)
-        formatted_time = datetime.fromtimestamp(timestamp).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+        formatted_time = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
         print()
         print(f"[Audit Log] Аудит замовлення ID #{stamped_record['id']}:")

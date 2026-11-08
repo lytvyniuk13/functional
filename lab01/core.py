@@ -3,16 +3,17 @@ core.py — Чисте функціональне ядро для Варіант
 Містить детерміновані чисті функції без побічних ефектів, глобальних змінних та мутацій.
 """
 
+from collections.abc import Callable, Iterable
 from copy import deepcopy
-from typing import Any, Callable, Dict, Iterable, List, Tuple, TypeVar, TypedDict
+from typing import Any, TypedDict, TypeVar
 
 
 class Rental(TypedDict, total=False):
     id: int
-    car_class: str      # 'economy', 'standard', 'suv', 'premium'
+    car_class: str  # 'economy', 'standard', 'suv', 'premium'
     days: int
     daily_rate: float
-    status: str         # 'confirmed', 'pending', 'cancelled'
+    status: str  # 'confirmed', 'pending', 'cancelled'
     base_price: float
     discount_amount: float
     insurance_fee: float
@@ -20,14 +21,17 @@ class Rental(TypedDict, total=False):
 
 
 FilterPolicyFn = Callable[[Rental], bool]
-DiscountPolicyFn = Callable[[float, int], float]       # (base_price, days) -> discount_amount
-InsurancePolicyFn = Callable[[float, str], float]      # (discounted_subtotal, car_class) -> insurance_fee
-NowFn = Callable[[], float]                            # Інжекція часу без побічних ефектів
+DiscountPolicyFn = Callable[
+    [float, int], float
+]  # (base_price, days) -> discount_amount
+InsurancePolicyFn = Callable[
+    [float, str], float
+]  # (discounted_subtotal, car_class) -> insurance_fee
+NowFn = Callable[[], float]  # Інжекція часу без побічних ефектів
 
 T = TypeVar("T")
 U = TypeVar("U")
 V = TypeVar("V")
-
 
 
 def compose(f: Callable[[U], V], g: Callable[[T], U]) -> Callable[[T], V]:
@@ -41,6 +45,7 @@ def make_multiplier(k: float) -> Callable[[float], float]:
 
 
 # --- Чисті функції предметної області (Варіант №9) ---
+
 
 def calculate_base_price(rental: Rental) -> float:
     """Обчислює базову вартість оренди: дні * денна ставка."""
@@ -104,24 +109,26 @@ def with_rental_totals(
     }
 
 
-def stamp_record(record: Rental, now: NowFn) -> Tuple[Rental, float]:
+def stamp_record(record: Rental, now: NowFn) -> tuple[Rental, float]:
     """Приклад ізоляції залежності від часу через інжекцію Callable."""
     return deepcopy(record), now()
 
 
 # --- Функція вищого порядку (Фабрика обробника) ---
 
+
 def make_rental_processor(
     *,
     filter_policy: FilterPolicyFn = default_rental_filter,
     discount_policy: DiscountPolicyFn = default_duration_discount,
     insurance_policy: InsurancePolicyFn = default_insurance_fee,
-) -> Callable[[Iterable[Rental]], Dict[str, Any]]:
+) -> Callable[[Iterable[Rental]], dict[str, Any]]:
     """
     Фабрика, що конструює чистий конвеєр обробки з інжектованими політиками.
     """
-    def process(rentals: Iterable[Rental]) -> Dict[str, Any]:
-        processed_rentals: List[Rental] = []
+
+    def process(rentals: Iterable[Rental]) -> dict[str, Any]:
+        processed_rentals: list[Rental] = []
         total_revenue = 0.0
         total_discount = 0.0
         total_insurance = 0.0
@@ -166,7 +173,7 @@ def process_rentals_pure(
     filter_policy: FilterPolicyFn = default_rental_filter,
     discount_policy: DiscountPolicyFn = default_duration_discount,
     insurance_policy: InsurancePolicyFn = default_insurance_fee,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Прямий чистий виклик процесора замовлень."""
     processor = make_rental_processor(
         filter_policy=filter_policy,
