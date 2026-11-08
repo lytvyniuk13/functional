@@ -135,4 +135,4 @@ def test_stamp_record() -> None:
         "days": 2,
         "daily_rate": 30.0,
     }
-    stamped, ts = stamp_record(record, mock_now)
+    _stamped, _ts = stamp_record(record, mock_now)
