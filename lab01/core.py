@@ -181,3 +181,6 @@ def process_rentals_pure(
         insurance_policy=insurance_policy,
     )
     return processor(rentals)
+
+
+with_total = with_rental_totals
