@@ -1,0 +1,8 @@
+[
+  {"title": "  Inception  ", "genre": "sci-fi", "year": 2010, "rating": 8.8, "votes": 2400000},
+  {"title": "The Matrix", "genre": "Sci-Fi", "year": 1999, "rating": 8.7, "votes": 1900000},
+  {"title": "Interstellar", "genre": "Adventure", "year": 2014, "rating": 8.7, "votes": 1900000},
+  {"title": "The Dark Knight", "genre": "Action", "year": 2008, "rating": 9.0, "votes": 2700000},
+  {"title": "The Room", "genre": "Drama", "year": 2003, "rating": 3.7, "votes": 90000},
+  {"title": "Oppenheimer", "genre": "biography", "year": 2023, "rating": 8.9, "votes": 850000}
+]
