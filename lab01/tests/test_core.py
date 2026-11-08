@@ -135,4 +135,8 @@ def test_stamp_record() -> None:
         "days": 2,
         "daily_rate": 30.0,
     }
-    _stamped, _ts = stamp_record(record, mock_now)
+    stamped, ts = stamp_record(record, mock_now)
+
+    assert ts == fixed_time
+    assert stamped["id"] == record["id"]
+    assert stamped is not record
