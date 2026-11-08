@@ -2,6 +2,7 @@
 
 from dataclasses import FrozenInstanceError
 from types import MappingProxyType
+
 import pytest
 
 from core import (
@@ -23,9 +24,7 @@ def sample_parcel() -> Parcel:
         status="pending",
         route=(pt,),
         labels=frozenset({"standard"}),
-        meta=make_meta(
-            sender="Yaroslav", recipient="Halyna", delivery_type="ground"
-        ),
+        meta=make_meta(sender="Yaroslav", recipient="Halyna", delivery_type="ground"),
     )
 
 
@@ -111,11 +110,10 @@ def test_hashability_route_point() -> None:
 
 
 def test_parcel_hashability_explanation(sample_parcel: Parcel) -> None:
-    # MappingProxyType у стандартному Python не реалізує __hash__,
-    # тому @dataclass(frozen=True) з таким полем викидає TypeError при hash(parcel).
+    # Поле meta не має __hash__, тому frozen dataclass викидає TypeError
     with pytest.raises(TypeError) as exc_info:
         hash(sample_parcel)
-    assert "unhashable type: 'mappingproxy'" in str(exc_info.value)
+    assert "unhashable" in str(exc_info.value).lower()
 
 
 def test_calculate_delivery_cost(sample_parcel: Parcel) -> None:

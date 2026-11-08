@@ -1,13 +1,12 @@
 """tests/test_core.py — Pytest-тести для конвеєра лабораторної роботи №2 (Варіант №9)."""
 
 from copy import deepcopy
-from typing import List
+
 import pytest
 
 from core import (
     EmployeeRecord,
     build_pipeline,
-    compose,
     juxt,
     pipe,
     reduce_stats,
@@ -15,7 +14,7 @@ from core import (
 
 
 @pytest.fixture
-def sample_employees() -> List[EmployeeRecord]:
+def sample_employees() -> list[EmployeeRecord]:
     return [
         {
             "id": 1,
@@ -51,11 +50,9 @@ def sample_employees() -> List[EmployeeRecord]:
 
 
 def test_referential_transparency(
-    sample_employees: List[EmployeeRecord],
+    sample_employees: list[EmployeeRecord],
 ) -> None:
-    pipeline = build_pipeline(
-        top_n=3, department="IT", factor=1.15, min_hours=80.0
-    )
+    pipeline = build_pipeline(top_n=3, department="IT", factor=1.15, min_hours=80.0)
     res1 = pipeline(sample_employees)
     res2 = pipeline(sample_employees)
 
@@ -63,11 +60,9 @@ def test_referential_transparency(
     assert res1 == res2
 
 
-def test_immutability(sample_employees: List[EmployeeRecord]) -> None:
+def test_immutability(sample_employees: list[EmployeeRecord]) -> None:
     original = deepcopy(sample_employees)
-    pipeline = build_pipeline(
-        top_n=2, department="IT", factor=1.15, min_hours=50.0
-    )
+    pipeline = build_pipeline(top_n=2, department="IT", factor=1.15, min_hours=50.0)
     _ = pipeline(sample_employees)
 
     # Вхідні словники та список не зазнали змін
@@ -76,10 +71,8 @@ def test_immutability(sample_employees: List[EmployeeRecord]) -> None:
         assert "total_hours" not in emp
 
 
-def test_top_n_and_sorting(sample_employees: List[EmployeeRecord]) -> None:
-    pipeline = build_pipeline(
-        top_n=3, department="IT", factor=1.15, min_hours=80.0
-    )
+def test_top_n_and_sorting(sample_employees: list[EmployeeRecord]) -> None:
+    pipeline = build_pipeline(top_n=3, department="IT", factor=1.15, min_hours=80.0)
     res = pipeline(sample_employees)
 
     assert len(res) == 3
@@ -93,22 +86,18 @@ def test_top_n_and_sorting(sample_employees: List[EmployeeRecord]) -> None:
 
 def test_tie_breaker_id_ascending() -> None:
     # Перевірка сортування за 2 ключами: при однакових годинах перевага у меншого id
-    data: List[EmployeeRecord] = [
+    data: list[EmployeeRecord] = [
         {"id": 10, "name": "B", "department": "IT", "monthly_hours": [100.0]},
         {"id": 2, "name": "A", "department": "IT", "monthly_hours": [100.0]},
     ]
-    pipeline = build_pipeline(
-        top_n=2, department="IT", factor=1.0, min_hours=0.0
-    )
+    pipeline = build_pipeline(top_n=2, department="IT", factor=1.0, min_hours=0.0)
     res = pipeline(data)
 
     assert [r["id"] for r in res] == [2, 10]
 
 
-def test_reduce_stats(sample_employees: List[EmployeeRecord]) -> None:
-    pipeline = build_pipeline(
-        top_n=3, department="IT", factor=1.15, min_hours=80.0
-    )
+def test_reduce_stats(sample_employees: list[EmployeeRecord]) -> None:
+    pipeline = build_pipeline(top_n=3, department="IT", factor=1.15, min_hours=80.0)
     res = pipeline(sample_employees)
     stats = reduce_stats(res)
 

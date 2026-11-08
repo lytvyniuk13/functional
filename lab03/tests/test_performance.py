@@ -1,8 +1,7 @@
 """tests/test_performance.py — Порівняльний аналіз швидкодії in-place змін та pure updates."""
 
 import time
-from typing import Any, List, Set
-import pytest
+from typing import Any
 
 from core import add_label, add_route_point, change_status
 from model import Parcel, RoutePoint, make_meta
@@ -10,7 +9,7 @@ from model import Parcel, RoutePoint, make_meta
 
 # Мутабельний аналог (Baseline) для порівняння часу
 class MutableRoutePoint:
-    __slots__ = ("city", "checkpoint", "distance_km")
+    __slots__ = ("checkpoint", "city", "distance_km")
 
     def __init__(self, city: str, checkpoint: str, distance_km: float):
         self.city = city
@@ -19,15 +18,15 @@ class MutableRoutePoint:
 
 
 class MutableParcel:
-    __slots__ = ("id", "weight_kg", "status", "route", "labels", "meta")
+    __slots__ = ("id", "labels", "meta", "route", "status", "weight_kg")
 
     def __init__(
         self,
         id: int,
         weight_kg: float,
         status: str,
-        route: List[MutableRoutePoint],
-        labels: Set[str],
+        route: list[MutableRoutePoint],
+        labels: set[str],
         meta: dict[str, Any],
     ):
         self.id = id

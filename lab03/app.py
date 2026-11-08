@@ -20,9 +20,7 @@ def render_parcel_info(title: str, p: Parcel) -> None:
     print("-" * 68)
     print(f"[{title}]")
     print(f"• ID: {p.id} | Статус: {p.status.upper()} | Вага: {p.weight_kg} кг")
-    print(
-        f"• Мітки (Labels): {', '.join(sorted(p.labels)) if p.labels else 'немає'}"
-    )
+    print(f"• Мітки (Labels): {', '.join(sorted(p.labels)) if p.labels else 'немає'}")
     print("• Маршрут доставки:")
     for idx, pt in enumerate(p.route, start=1):
         print(f"   {idx}. {pt.city} ({pt.checkpoint}) — {pt.distance_km} км")
@@ -33,15 +31,11 @@ def render_parcel_info(title: str, p: Parcel) -> None:
 
 def main() -> None:
     print("=" * 68)
-    print(
-        "      СИСТЕМА ДОСТАВКИ ПОСИЛОК: ІМУТАБЕЛЬНА МОДЕЛЬ (ВАРІАНТ №9)     "
-    )
+    print("      СИСТЕМА ДОСТАВКИ ПОСИЛОК: ІМУТАБЕЛЬНА МОДЕЛЬ (ВАРІАНТ №9)     ")
     print("=" * 68)
 
     # 1. Створення початкової незмінної посилки
-    start_point = RoutePoint(
-        city="Львів", checkpoint="Відділення №1", distance_km=10.0
-    )
+    start_point = RoutePoint(city="Львів", checkpoint="Відділення №1", distance_km=10.0)
     initial_parcel = Parcel(
         id=9001,
         weight_kg=4.2,
@@ -58,12 +52,8 @@ def main() -> None:
     render_parcel_info("1. СТВОРЕННЯ ПОСИЛКИ", initial_parcel)
 
     # 2. Pure update: додавання точок маршруту
-    p_route = add_route_point(
-        initial_parcel, "Рівне", "Транзитний HUB-Захід", 210.0
-    )
-    p_route = add_route_point(
-        p_route, "Київ", "Центральне відділення №14", 330.0
-    )
+    p_route = add_route_point(initial_parcel, "Рівне", "Транзитний HUB-Захід", 210.0)
+    p_route = add_route_point(p_route, "Київ", "Центральне відділення №14", 330.0)
     render_parcel_info("2. ПІСЛЯ ДОДАВАННЯ ТОЧОК МАРШРУТУ", p_route)
 
     # 3. Pure update: додавання міток

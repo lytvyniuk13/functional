@@ -7,16 +7,15 @@
 import argparse
 import json
 import os
-from typing import Any, Dict, List
 
 from core import EmployeeRecord, build_pipeline, juxt, reduce_stats
 
 
-def load_data(file_path: str) -> List[EmployeeRecord]:
+def load_data(file_path: str) -> list[EmployeeRecord]:
     """Зчитує вхідні дані з JSON файлу або повертає тестовий набір за замовчуванням."""
     if os.path.exists(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
-            data: List[EmployeeRecord] = json.load(f)
+            data: list[EmployeeRecord] = json.load(f)
             return data
 
     return [
@@ -53,16 +52,12 @@ def load_data(file_path: str) -> List[EmployeeRecord]:
     ]
 
 
-def render_report(
-    top_employees: List[EmployeeRecord], stats: Dict[str, float]
-) -> None:
+def render_report(top_employees: list[EmployeeRecord], stats: dict[str, float]) -> None:
     """Виводить відформатовану таблицю рейтингу та підсумкову статистику в консоль."""
     print("=" * 66)
     print("      РЕЙТИНГ ПРАЦІВНИКІВ КОМПАНІЇ (ВАРІАНТ №9: TOP-N)      ")
     print("=" * 66)
-    print(
-        f"{'Ранг':<5} | {'ID':<4} | {'Ім’я':<18} | {'Відділ':<14} | {'Години':<8}"
-    )
+    print(f"{'Ранг':<5} | {'ID':<4} | {'Ім’я':<18} | {'Відділ':<14} | {'Години':<8}")
     print("-" * 66)
 
     for rank, emp in enumerate(top_employees, start=1):

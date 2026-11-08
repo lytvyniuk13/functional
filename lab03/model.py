@@ -4,9 +4,10 @@
 MappingProxyType.
 """
 
+from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from types import MappingProxyType
-from typing import Any, Mapping, NamedTuple, Tuple
+from typing import Any, NamedTuple
 
 
 class RoutePoint(NamedTuple):
@@ -17,7 +18,7 @@ class RoutePoint(NamedTuple):
     distance_km: float
 
 
-def make_meta(**kwargs: Any) -> MappingProxyType:
+def make_meta(**kwargs: Any) -> MappingProxyType[str, Any]:
     """Створює захищений тільки-для-читання словник метаданих.
 
     Попередньо копіює джерело dict(kwargs), щоб уникнути зовнішніх мутацій.
@@ -36,7 +37,7 @@ class Parcel:
     id: int
     weight_kg: float
     status: str  # 'pending', 'in_transit', 'delivered', 'cancelled'
-    route: Tuple[RoutePoint, ...]  # незмінний кортеж (НЕ list)
+    route: tuple[RoutePoint, ...]  # незмінний кортеж (НЕ list)
     labels: frozenset[str]  # незмінна множина міток (НЕ set)
     meta: Mapping[str, Any]  # read-only view MappingProxyType (НЕ dict)
 

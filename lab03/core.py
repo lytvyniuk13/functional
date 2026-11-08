@@ -11,9 +11,7 @@ def add_route_point(
     parcel: Parcel, city: str, checkpoint: str, distance_km: float
 ) -> Parcel:
     """Чиста функція додавання нової точки маршруту."""
-    point = RoutePoint(
-        city=city, checkpoint=checkpoint, distance_km=distance_km
-    )
+    point = RoutePoint(city=city, checkpoint=checkpoint, distance_km=distance_km)
     return parcel.with_route_point(point)
 
 
